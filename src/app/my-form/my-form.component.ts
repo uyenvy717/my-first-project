@@ -50,7 +50,7 @@ export class MyFormComponent {
         this.showJsonResult = true;
       }
     } else {
-      this.generatedJson = 'hi';
+      this.generatedJson = 'submited';
       this.showJsonResult = false; // Hide JSON result if form is not valid
     }
 
