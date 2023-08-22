@@ -41,10 +41,8 @@
             <button (click)="onSubmit()" mat-raised-button color="primary">Submit</button>
         </mat-card-actions>
     </mat-card>
+    <mat-slide-toggle class="mt-3">Toggle me!</mat-slide-toggle>
 </form>
-
-<!-- Chuyển chủ đề sáng tối -->
-<!-- <mat-slide-toggle class="top-padding">Toggle me!</mat-slide-toggle> -->
 
 <div class="form-container" *ngIf="!myForm.valid && generatedJson !== ''">
     <mat-error>You need to fill in all the information.</mat-error>
