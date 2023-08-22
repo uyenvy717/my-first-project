@@ -1,24 +1,62 @@
-<form (ngSubmit)="onSubmit()">
-    <div class="form-group">
-        <label for="textInput">Text Field:</label>
-        <input type="text" id="textInput" name="textInput" [(ngModel)]="userInput.text" class="form-control" required />
-    </div>
-    <div class="form-group">
-        <label for="numberInput">Number:</label>
-        <input type="number" id="numberInput" name="numberInput" [(ngModel)]="userInput.number" class="form-control"
-            required />
-    </div>
-    <div class="form-group">
-        <label for="dateInput">Date:</label>
-        <input type="date" id="dateInput" name="dateInput" [(ngModel)]="userInput.date" class="form-control" required />
-    </div>
-    <input type="hidden" name="hiddenField" value="hello there" />
-    <button type="submit" class="btn btn-primary">Submit</button>
+<form [formGroup]="myForm" class="form-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Input Form</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field class="full-width">
+                        <input formControlName="text" matInput>
+                        <mat-error *ngIf="myForm.get('text')?.touched && myForm.get('text')?.hasError('required')">
+                            Text is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                    <mat-form-field class="full-width">
+                        <input type="number" formControlName="number" matInput>
+                        <mat-error *ngIf="myForm.get('number')?.touched && myForm.get('number')?.hasError('required')">
+                            Number is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 top-padding">
+                    <mat-form-field class="full-width" appearance="fill">
+                        <mat-label>Choose a date</mat-label>
+                        <input formControlName="date" matInput [matDatepicker]="picker">
+                        <mat-error *ngIf="myForm.get('date')?.touched && myForm.get('date')?.hasError('required')">
+                            Date is required
+                        </mat-error>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <input type="hidden" formControlName="hiddenField" value="hello there" />
+        </mat-card-content>
+        <mat-card-actions>
+            <button (click)="onSubmit()" mat-raised-button color="primary">Submit</button>
+        </mat-card-actions>
+    </mat-card>
 </form>
 
-<mat-slide-toggle>Toggle me!</mat-slide-toggle>
+<!-- Chuyển chủ đề sáng tối -->
+<mat-slide-toggle class="top-padding">Toggle me!</mat-slide-toggle>
 
-<div class="json-output" *ngIf="generatedJson">
-    <h3>Generated JSON with MD5 Hash:</h3>
-    <pre>{{ generatedJson }}</pre>
+<div *ngIf="!myForm.valid && generatedJson !== ''">
+    <mat-error>You need to fill in all the information.</mat-error>
+</div>
+
+<div *ngIf="generatedJson !== '' && showJsonResult">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Generated JSON</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <pre>{{ generatedJson }}</pre>
+        </mat-card-content>
+    </mat-card>
 </div>

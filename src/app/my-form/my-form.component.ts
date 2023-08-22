@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as CryptoJS from 'crypto-js';
 
 @Component({
@@ -7,49 +8,52 @@ import * as CryptoJS from 'crypto-js';
   styleUrls: ['./my-form.component.css'],
 })
 export class MyFormComponent {
-  userInput: {
-    text: string;
-    number: number | null;
-    date: string;
-  } = {
-    text: '',
-    number: null,
-    date: ''
-  };
-
+  myForm: FormGroup;
   generatedJson: string = ''; // Variable to store the generated JSON
+  showJsonResult: boolean = false;
 
-  // Function to calculate the MD5 hash using crypto-js
-  calculateMD5(text: string): string {
-    return CryptoJS.MD5(text).toString(CryptoJS.enc.Hex);
+  constructor(private formBuilder: FormBuilder) {
+    this.myForm = this.formBuilder.group({
+      text: ['', Validators.required],
+      number: ['', Validators.required],
+      date: ['', Validators.required],
+      hiddenField: ['hello there'],
+    });
   }
 
   onSubmit() {
-    // Here, you can access the user's input as userInput.text, userInput.number, and userInput.date
-    console.log('Text Field:', this.userInput.text);
-    console.log('Number:', this.userInput.number);
-    console.log('Date:', this.userInput.date);
-    
-    // The hidden field's value is always "hello there"
-    console.log('Hidden Field:', 'hello there');
+    if (this.myForm.valid) {
+      const textControl = this.myForm.get('text');
+      const numberControl = this.myForm.get('number');
+      const dateControl = this.myForm.get('date');
+      const hiddenControl = this.myForm.get('hiddenField');
 
-    // Create a JSON object with form values
-    const formData = {
-      text: this.userInput.text,
-      number: this.userInput.number,
-      date: this.userInput.date
-    };
+      if (textControl && numberControl && dateControl) {
+        const formData = {
+          text: textControl?.value,
+          number: numberControl?.value,
+          date: dateControl?.value,
+          hidden: hiddenControl?.value,
+        };
 
-    // Calculate the MD5 hash based on the 'text' field
-    const md5Hash = this.calculateMD5(formData.text);
+        // Calculate the MD5 hash based on the 'text' field
+        const md5Hash = CryptoJS.MD5(formData.text).toString(CryptoJS.enc.Hex);
 
-    // Add the MD5 hash to the JSON
-    const jsonWithHash = {
-      ...formData,
-      md5Hash: md5Hash
-    };
+        // Add the MD5 hash to the JSON object
+        const jsonWithHash = {
+          ...formData,
+          md5Hash: md5Hash,
+        };
 
-    // Convert the JSON object with the hash to a JSON string
-    this.generatedJson = JSON.stringify(jsonWithHash, null, 2); // Using 2 for pretty printing
+        // Convert the JSON object to a JSON string
+        this.generatedJson = JSON.stringify(jsonWithHash, null, 2); // Using 2 for pretty printing
+        this.showJsonResult = true;
+      }
+    } else {
+      this.generatedJson = 'hi';
+      this.showJsonResult = false; // Hide JSON result if form is not valid
+    }
+
+    console.log('Form data is ', this.myForm.value);
   }
 }
