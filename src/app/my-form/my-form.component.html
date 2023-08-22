@@ -1,0 +1,24 @@
+<form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="textInput">Text Field:</label>
+        <input type="text" id="textInput" name="textInput" [(ngModel)]="userInput.text" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="numberInput">Number:</label>
+        <input type="number" id="numberInput" name="numberInput" [(ngModel)]="userInput.number" class="form-control"
+            required />
+    </div>
+    <div class="form-group">
+        <label for="dateInput">Date:</label>
+        <input type="date" id="dateInput" name="dateInput" [(ngModel)]="userInput.date" class="form-control" required />
+    </div>
+    <input type="hidden" name="hiddenField" value="hello there" />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<mat-slide-toggle>Toggle me!</mat-slide-toggle>
+
+<div class="json-output" *ngIf="generatedJson">
+    <h3>Generated JSON with MD5 Hash:</h3>
+    <pre>{{ generatedJson }}</pre>
+</div>
