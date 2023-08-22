@@ -1,0 +1,9 @@
+<div *ngIf="weatherData">
+    <h2>API Result</h2>
+    <p>Name: {{ weatherData.name }}</p>
+    <p>Age: {{ weatherData.age }}</p>
+    <!-- Display other API properties as needed -->
+  </div>
+  <div *ngIf="!weatherData">
+    <p>Loading data...</p>
+  </div>
