@@ -12,9 +12,11 @@ export class WeatherComponent implements OnInit {
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit(): void {
-    this.weatherService.getWeather().subscribe(data => {
-      this.weatherData = data;
-      console.log('Weather Data:', this.weatherData);
+    this.weatherService.getWeather().subscribe((data: any) => {
+      data.subscribe((innerData: any) => {
+        this.weatherData = innerData;
+        console.log('Weather Data:', this.weatherData);
+      });
     });
   }
 }

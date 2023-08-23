@@ -1,21 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WeatherService {
-  private apiKey = 'f463a364f75dc7e4e14a2acd9140f058';
-  private apiUrl = 'https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}';
+  private apiKey = '590b8d25e716a15331a573f5b45cbac2';
+  private apiUrl = 'https://api.openweathermap.org/data/3.0/onecall';
 
   constructor(private http: HttpClient) {}
 
   getWeather(): Observable<any> {
-    const city = 'Groningen,NL';
-    const units = 'metric'; // Celsius
-    const url = `${this.apiUrl}?q=${city}&units=${units}&appid=${this.apiKey}`;
+    const city = 'Groningen';
 
-    return this.http.get(url);
+    // Make a request to obtain latitude and longitude
+    const geoRequest = this.http.get<any[]>(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${this.apiKey}`)
+      .pipe(
+        map(data => data[0])
+      );
+
+    // Combine the latitude and longitude into a single request
+    return forkJoin([geoRequest]).pipe(
+      map(([location]) => {
+        console.log('Geo Location:', location.lat, location.lon, location.name);
+        const lat = location?.lat || '';
+        const lon = location?.lon || '';
+
+        const url = `${this.apiUrl}?lat=${lat}&lon=${lon}&appid=${this.apiKey}`;
+
+        return this.http.get(url);
+      })
+    );
   }
 }
