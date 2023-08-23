@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { WeatherComponent } from './weather/weather.component';
 
@@ -33,6 +34,7 @@ import { WeatherComponent } from './weather/weather.component';
     MatNativeDateModule,
     MatDatepickerModule,
     MatCardModule,
+    MatIconModule,
     NgbModule,
   ],
   providers: [],

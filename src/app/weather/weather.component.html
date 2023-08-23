@@ -1,7 +1,23 @@
 <div *ngIf="weatherData">
-    <h2>API Result</h2>
-    <p>Name: {{ weatherData.timezone }}</p>
+  <div class="row p-5 bg d-flex justify-content-center">
+    <form [formGroup]="weatherForm" (ngSubmit)="onSubmit()" class="d-flex justify-content-center">
+      <mat-form-field class="rounded-pill">
+        <input type="text" formControlName="city" matInput>
+        <mat-label>Enter city</mat-label>
+        <mat-icon matPrefix fontSet="material-icons-outlined">search</mat-icon>
+      </mat-form-field>
+    </form>
+    <mat-card class="weather-card p-4 col-md-6">
+      <mat-card-header>
+
+      </mat-card-header>
+      <mat-card-content>
+        {{ weatherData.timezone }}
+      </mat-card-content>
+    </mat-card>
   </div>
-  <div *ngIf="!weatherData">
-    <p>Loading data...</p>
-  </div>
+</div>
+
+<div *ngIf="!weatherData">
+  <p>Loading data...</p>
+</div>
