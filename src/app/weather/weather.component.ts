@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WeatherService } from './weather.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-weather',
@@ -9,20 +9,26 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class WeatherComponent implements OnInit {
   weatherData: any;
-  weatherForm = this.formBuilder.group({
-    city: [''],
-  });
+  weatherForm: FormGroup;
   city: any = 'Groningen';
+  temperature: any;
+  feelLike: any;
 
   constructor(
     private weatherService: WeatherService,
     private formBuilder: FormBuilder
-  ) {}
+  ) {
+    this.weatherForm = this.formBuilder.group({
+      city: [''],
+    });
+  }
 
   ngOnInit(): void {
     this.weatherService.getWeather(this.city).subscribe((data: any) => {
       data.subscribe((innerData: any) => {
         this.weatherData = innerData;
+        this.temperature = Math.round(this.weatherData?.current?.temp);
+        this.feelLike = Math.round(this.weatherData?.current?.feels_like);
         console.log('Weather Data:', this.weatherData);
       });
     });
@@ -30,11 +36,18 @@ export class WeatherComponent implements OnInit {
 
   onSubmit() {
     const input = this.weatherForm.value.city;
-    this.city = input;
-    // this.weatherService.getWeather(this.city).subscribe((data: any) => {
-    //   this.weatherData = data;
-    //   console.log('Weather Data:', this.weatherData);
-    // });
+    if (input == '') {
+      this.city = 'Groningen';
+    } else this.city = input;
     this.ngOnInit();
+  }
+
+  getCurrentDate(): string {
+    const currentDate = new Date();
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'short',
+      day: '2-digit',
+    };
+    return currentDate.toLocaleDateString('en-US', options);
   }
 }

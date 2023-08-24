@@ -26,7 +26,7 @@ export class WeatherService {
         const lat = location?.lat || '';
         const lon = location?.lon || '';
 
-        const url = `${this.apiUrl}?lat=${lat}&lon=${lon}&appid=${this.apiKey}`;
+        const url = `${this.apiUrl}?lat=${lat}&lon=${lon}&units=metric&appid=${this.apiKey}`;
 
         return this.http.get(url);
       })
