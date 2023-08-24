@@ -10,10 +10,16 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class WeatherComponent implements OnInit {
   weatherData: any;
   weatherForm: FormGroup;
+  usingDate: any;
   city: any = 'Groningen';
+  x: any = 0;
   temperature: any;
   feelLike: any;
   icon: string = 'Mist';
+  wind: any;
+  humidity: any;
+  isButtonDisabled: boolean = true;
+  isButtonDisabled2: boolean = false;
 
   constructor(
     private weatherService: WeatherService,
@@ -22,15 +28,15 @@ export class WeatherComponent implements OnInit {
     this.weatherForm = this.formBuilder.group({
       city: [''],
     });
+
+    this.getCurrentDate();
   }
 
   ngOnInit(): void {
     this.weatherService.getWeather(this.city).subscribe((data: any) => {
       data.subscribe((innerData: any) => {
         this.weatherData = innerData;
-        this.temperature = Math.round(this.weatherData?.current?.temp);
-        this.feelLike = Math.round(this.weatherData?.current?.feels_like);
-        this.icon = this.calculateWeatherIcon(this.weatherData);
+        this.changeData();
         console.log('Weather Data:', this.weatherData);
       });
     });
@@ -44,42 +50,99 @@ export class WeatherComponent implements OnInit {
     this.ngOnInit();
   }
 
-  getCurrentDate(): string {
-    const currentDate = new Date();
+  getCurrentDate(): void {
+    const date = new Date();
+    this.usingDate = date;
+  }
+
+  formatDate(date: Date): string {
     const options: Intl.DateTimeFormatOptions = {
       weekday: 'short',
       day: '2-digit',
     };
-    return currentDate.toLocaleDateString('en-US', options);
+    return date.toLocaleDateString('en-US', options);
   }
 
   weatherIconMapping: { [condition: string]: string } = {
-    'Clear': 'wb_sunny',
-    'Clouds': 'cloud',
+    Clear: 'wb_sunny',
+    Clouds: 'cloud',
     'broken clouds': 'filter_drama',
-    'Drizzle': 'water_drop',
-    'Rain': 'water_drop',
-    'Thunderstorm': 'thunderstorm',
-    'Snow': 'ac_unit',
-    'Mist': 'fitbit',
+    Drizzle: 'water_drop',
+    Rain: 'water_drop',
+    Thunderstorm: 'thunderstorm',
+    Snow: 'ac_unit',
+    Mist: 'fitbit',
   };
 
   calculateWeatherIcon(data: any): string {
-    const currentCondition = data.current.weather[0].main;
-    const sunsetTimestamp = data.current.sunset;
-
-    // Get the current timestamp
-    const currentTimestamp = Math.floor(Date.now() / 1000);
-
-    // Check if it's after sunset and the condition is "clear sky"
-    if (
-      currentTimestamp > sunsetTimestamp &&
-      currentCondition === 'clear sky'
-    ) {
-      this.icon = 'nights_stay';
+    if (this.x !== 0) {
+      const condition = data.daily[this.x - 1].weather[0].main;
+      this.icon = this.weatherIconMapping[condition];
     } else {
-      this.icon = this.weatherIconMapping[currentCondition];
+      const currentCondition = data.current.weather[0].main;
+      const sunsetTimestamp = data.current.sunset;
+
+      // Get the current timestamp
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+
+      // Check if it's after sunset and the condition is "clear sky"
+      if (
+        currentTimestamp > sunsetTimestamp &&
+        currentCondition === 'clear sky'
+      ) {
+        this.icon = 'nights_stay';
+      } else {
+        this.icon = this.weatherIconMapping[currentCondition];
+      }
     }
     return this.icon;
+  }
+
+  selectBeforeDate() {
+    const currentDate = new Date();
+    if (this.usingDate.getDate() === currentDate.getDate() + 2) {
+      this.x = this.x - 1;
+      this.usingDate.setDate(currentDate.getDate() + 1);
+      this.isButtonDisabled2 = false;
+    } else {
+      this.x = this.x - 1;
+      this.usingDate.setDate(currentDate.getDate());
+      this.isButtonDisabled = true;
+    }
+    this.changeData();
+  }
+
+  selectNextDate() {
+    const currentDate = new Date();
+    if (this.usingDate.getDate() === currentDate.getDate()) {
+      this.x = this.x + 1;
+      this.usingDate.setDate(currentDate.getDate() + 1);
+      this.isButtonDisabled = false;
+    } else {
+      this.x = this.x + 1;
+      this.usingDate.setDate(currentDate.getDate() + 2);
+      this.isButtonDisabled2 = true;
+    }
+    this.changeData();
+  }
+
+  changeData(): void {
+    if (this.x === 0) {
+      this.temperature = Math.round(this.weatherData?.current?.temp);
+      this.feelLike = Math.round(this.weatherData?.current?.feels_like);
+      this.icon = this.calculateWeatherIcon(this.weatherData);
+      this.wind = this.weatherData?.current?.wind_speed;
+      this.humidity = this.weatherData?.current?.humidity;
+    } else {
+      this.temperature = Math.round(
+        this.weatherData?.daily[this.x - 1]?.temp?.day
+      );
+      this.feelLike = Math.round(
+        this.weatherData?.daily[this.x - 1]?.feels_like?.day
+      );
+      this.icon = this.calculateWeatherIcon(this.weatherData);
+      this.wind = this.weatherData?.daily[this.x - 1]?.wind_speed;
+      this.humidity = this.weatherData?.daily[this.x - 1]?.humidity;
+    }
   }
 }

@@ -7,36 +7,44 @@
         <mat-icon matPrefix fontSet="material-icons-outlined">search</mat-icon>
       </mat-form-field>
     </form>
-    <mat-card class="weather-card p-4 col-md-6">
-      <mat-card-header class="d-flex align-items-center justify-content-center">
-        <mat-card-title>{{ getCurrentDate() }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="text-center align-items-center">
-        <div class="row align-items-center justify-content-center">
-          <mat-icon fontSet="material-icons-outlined" class="w-auto h-auto fs-1">{{ icon }}</mat-icon>
-          <h1 class="fw-bold fs-1 p-5">{{ temperature }} °C</h1>
-          <h1 class="text-uppercase">{{ city }}</h1>
-          <div class="col">
-            <div class="row">
-              <h3 class="fs-5">Wind</h3>
-              <p class="fs-6">{{ weatherData.current.wind_speed }} m/s</p>
+    <div class="row align-items-center justify-content-around">
+      <button mat-icon-button (click)="selectBeforeDate()" [disabled]="isButtonDisabled">
+        <mat-icon>navigate_before</mat-icon>
+      </button>
+      <mat-card class="weather-card p-4 col-md-6">
+        <mat-card-header class="d-flex align-items-center justify-content-center">
+          <mat-card-title>{{ formatDate(usingDate) }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="text-center align-items-center">
+          <div class="row align-items-center justify-content-center">
+            <mat-icon fontSet="material-icons-outlined" class="w-auto h-auto fs-1">{{ icon }}</mat-icon>
+            <h1 class="fw-bold fs-1 p-5">{{ temperature }} °C</h1>
+            <h1 class="text-uppercase">{{ city }}</h1>
+            <div class="col">
+              <div class="row">
+                <h3 class="fs-5">Wind</h3>
+                <p class="fs-6">{{ wind }} m/s</p>
+              </div>
+            </div>
+            <div class="col">
+              <div class="row">
+                <h3 class="fs-5">Feels like</h3>
+                <p class="fs-6">{{ feelLike }} °C</p>
+              </div>
+            </div>
+            <div class="col">
+              <div class="row">
+                <h3 class="fs-5">Humidity</h3>
+                <p class="fs-6">{{ humidity }}%</p>
+              </div>
             </div>
           </div>
-          <div class="col">
-            <div class="row">
-              <h3 class="fs-5">Feel like</h3>
-              <p class="fs-6">{{ feelLike }} °C</p>
-            </div>
-          </div>
-          <div class="col">
-            <div class="row">
-              <h3 class="fs-5">Humidity</h3>
-              <p class="fs-6">{{ weatherData.current.humidity }}%</p>
-            </div>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
+      <button mat-icon-button (click)="selectNextDate()" [disabled]="isButtonDisabled2">
+        <mat-icon>navigate_next</mat-icon>
+      </button>
+    </div>
   </div>
 </div>
 
