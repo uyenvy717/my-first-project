@@ -13,25 +13,25 @@
       </mat-card-header>
       <mat-card-content class="text-center align-items-center">
         <div class="row align-items-center justify-content-center">
-          <mat-icon fontSet="material-icons-outlined" class="w-auto">wb_sunny</mat-icon>
-          <p>{{ temperature }} °C</p>
-          <p>{{ city }}</p>
+          <mat-icon fontSet="material-icons-outlined" class="w-auto h-auto fs-1">{{ icon }}</mat-icon>
+          <h1 class="fw-bold fs-1 p-5">{{ temperature }} °C</h1>
+          <h1 class="text-uppercase">{{ city }}</h1>
           <div class="col">
             <div class="row">
-              <p>Wind</p>
-              <p>{{ weatherData.current.wind_speed }} m/s</p>
+              <h3 class="fs-5">Wind</h3>
+              <p class="fs-6">{{ weatherData.current.wind_speed }} m/s</p>
             </div>
           </div>
           <div class="col">
             <div class="row">
-              <p>Feel like</p>
-              <p>{{ feelLike }} °C</p>
+              <h3 class="fs-5">Feel like</h3>
+              <p class="fs-6">{{ feelLike }} °C</p>
             </div>
           </div>
           <div class="col">
             <div class="row">
-              <p>Humidity</p>
-              <p>{{ weatherData.current.humidity }}%</p>
+              <h3 class="fs-5">Humidity</h3>
+              <p class="fs-6">{{ weatherData.current.humidity }}%</p>
             </div>
           </div>
         </div>
@@ -40,6 +40,6 @@
   </div>
 </div>
 
-<div *ngIf="!weatherData" class="d-flex justify-content-center align-items-center">
+<div *ngIf="!weatherData" class="d-flex justify-content-center align-items-center m-5">
   <mat-spinner></mat-spinner>
 </div>
