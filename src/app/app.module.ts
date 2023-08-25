@@ -17,10 +17,17 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { WeatherComponent } from './weather/weather.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { NavbarComponent } from './navbar/navbar.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
-  declarations: [AppComponent, MyFormComponent, WeatherComponent],
+  declarations: [
+    AppComponent,
+    MyFormComponent,
+    WeatherComponent,
+    NavbarComponent,
+  ],
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -37,7 +44,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCardModule,
     MatIconModule,
     NgbModule,
-    MatProgressSpinnerModule,
+    MatToolbarModule,
+    MatProgressBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

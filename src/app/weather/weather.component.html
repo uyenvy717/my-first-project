@@ -48,6 +48,6 @@
   </div>
 </div>
 
-<div *ngIf="!weatherData" class="d-flex justify-content-center align-items-center m-5">
-  <mat-spinner></mat-spinner>
+<div *ngIf="!weatherData">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
