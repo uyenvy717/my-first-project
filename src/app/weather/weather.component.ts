@@ -34,11 +34,9 @@ export class WeatherComponent implements OnInit {
 
   ngOnInit(): void {
     this.weatherService.getWeather(this.city).subscribe((data: any) => {
-      data.subscribe((innerData: any) => {
-        this.weatherData = innerData;
-        this.changeData();
-        console.log('Weather Data:', this.weatherData);
-      });
+      this.weatherData = data;
+      this.changeData();
+      console.log('Weather Data:', this.weatherData);
     });
   }
 
@@ -75,26 +73,9 @@ export class WeatherComponent implements OnInit {
   };
 
   calculateWeatherIcon(data: any): string {
-    if (this.x !== 0) {
-      const condition = data.daily[this.x - 1].weather[0].main;
-      this.icon = this.weatherIconMapping[condition];
-    } else {
-      const currentCondition = data.current.weather[0].main;
-      const sunsetTimestamp = data.current.sunset;
+    const currentCondition = data.main;
+    this.icon = this.weatherIconMapping[currentCondition];
 
-      // Get the current timestamp
-      const currentTimestamp = Math.floor(Date.now() / 1000);
-
-      // Check if it's after sunset and the condition is "clear sky"
-      if (
-        currentTimestamp > sunsetTimestamp &&
-        currentCondition === 'clear sky'
-      ) {
-        this.icon = 'nights_stay';
-      } else {
-        this.icon = this.weatherIconMapping[currentCondition];
-      }
-    }
     return this.icon;
   }
 
@@ -127,22 +108,10 @@ export class WeatherComponent implements OnInit {
   }
 
   changeData(): void {
-    if (this.x === 0) {
-      this.temperature = Math.round(this.weatherData?.current?.temp);
-      this.feelLike = Math.round(this.weatherData?.current?.feels_like);
-      this.icon = this.calculateWeatherIcon(this.weatherData);
-      this.wind = this.weatherData?.current?.wind_speed;
-      this.humidity = this.weatherData?.current?.humidity;
-    } else {
-      this.temperature = Math.round(
-        this.weatherData?.daily[this.x - 1]?.temp?.day
-      );
-      this.feelLike = Math.round(
-        this.weatherData?.daily[this.x - 1]?.feels_like?.day
-      );
-      this.icon = this.calculateWeatherIcon(this.weatherData);
-      this.wind = this.weatherData?.daily[this.x - 1]?.wind_speed;
-      this.humidity = this.weatherData?.daily[this.x - 1]?.humidity;
-    }
+    this.temperature = Math.round(this.weatherData[this.x]?.temp);
+    this.feelLike = Math.round(this.weatherData[this.x]?.feels_like);
+    this.icon = this.calculateWeatherIcon(this.weatherData[this.x]);
+    this.wind = this.weatherData[this.x]?.wind_speed;
+    this.humidity = this.weatherData[this.x]?.humidity;
   }
 }

@@ -7,8 +7,7 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class WeatherService {
-  private apiKey = '590b8d25e716a15331a573f5b45cbac2';
-  private apiUrl = 'https://api.openweathermap.org/data/3.0/onecall';
+  private apiUrl = 'http://localhost:8080/api/weather/';
 
   private cache: Map<string, { data: any, timestamp: number }> = new Map();
 
@@ -41,36 +40,10 @@ export class WeatherService {
   }
 
   fetchWeather(city: string): Observable<any> {
-    // Make a request to obtain latitude and longitude
-    const geoRequest = this.http.get<any[]>(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${this.apiKey}`)
-      .pipe(
-        map(data => data[0]),
-        catchError(error => {
-          // Handle and log the error, then re-throw it
-          console.error('Error fetching location data:', error);
-          return throwError(() => error);
-        })
-      );
-
-    // Combine the latitude and longitude into a single request
-    return forkJoin([geoRequest]).pipe(
-      map(([location]) => {
-        console.log('Geo Location:', location.lat, location.lon, location.name);
-        const lat = location?.lat || '';
-        const lon = location?.lon || '';
-
-        const url = `${this.apiUrl}?lat=${lat}&lon=${lon}&units=metric&appid=${this.apiKey}`;
-        return this.http.get(url).pipe(
-          catchError(error => {
-            // Handle and log the error, then re-throw it
-            console.error('Error fetching weather data:', error);
-            return throwError(() => error);
-          })
-        );
-      }),
+    return this.http.get(this.apiUrl).pipe(
       catchError(error => {
-        // Handle and log any errors that occur in the switchMap or final result
-        console.error('Error in getWeather:', error);
+        // Handle and log the error, then re-throw it
+        console.error('Error fetching weather data:', error);
         return throwError(() => error);
       })
     );
